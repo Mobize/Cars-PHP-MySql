@@ -1,0 +1,81 @@
+<div *ngIf="error" class="alert alert-danger">{{error}}</div>
+<div *ngIf="success" class="alert alert-success">{{success}}</div>
+
+<div id="theList">
+    <h2>Liste de véhicules <small>(Application de démonstration Backend PHP/MySql)</small></h2>
+
+    <div class="list-group vehicules">
+      <div *ngFor="let item of cars;let i = index;" class="list-group-item row">
+        <div class="col-4" style="float:left">
+          <input type="text"
+                 [(ngModel)]="cars[i].model"
+                 class="form-control"
+                 required
+                 pattern="^[a-zA-Z]+$"
+                 #model="ngModel"
+                 [ngClass]="{ 'is-invalid': model.touched && model.invalid }">
+        </div>
+        <div class="col-4" style="float:left">
+          <input type="number"
+                 [(ngModel)]="cars[i].price"
+                 class="form-control"
+                 required
+                 #price="ngModel"
+                 [ngClass]="{ 'is-invalid': price.touched && price.invalid }">
+        </div>
+        <div class="col-4" style="float:left">
+          <input type="button"
+                 value="Mise à jour"
+                 class="btn btn-success btn-sm"
+                 [disabled]="model.invalid || price.invalid"
+                 (click)="updateCar(model, price, item.id)">
+          &nbsp;
+          <input type="button"
+                 value="Supprimer"
+                 class="btn btn-danger btn-sm"
+                 (click)="deleteCar(item.id)">
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+<div id="theForm">
+  <h2>Ajouter un véhicule</h2>
+  <form #f="ngForm" name="theForm" (submit)="addCar(f)">
+    <div class="form-group">
+      <label>Modèle</label>
+      <input type="text"
+            class="form-control"
+            name="model"
+            [(ngModel)]="car.model"
+            #carModel="ngModel"
+            required
+            pattern="^[a-zA-Z]+$">
+      <span class="help-block danger" *ngIf="carModel.errors?.required && carModel.touched">
+        Le nom du modèle est obligatoire
+      </span>
+      <span class="help-block danger" *ngIf="carModel.errors?.pattern && carModel.touched">
+        Le nom du modèle ne doit contenir que des lettres
+      </span>
+    </div>
+
+    <div class="form-group">
+      <label>Prix</label>
+      <input type="number"
+            class="form-control"
+            name="price"
+            required
+            [(ngModel)]="car.price"
+            #carPrice="ngModel">
+      <span class="help-block danger" *ngIf="carPrice.errors?.required && carPrice.touched">
+        Le prix est obligatoire
+      </span>
+    </div>
+
+    <button
+        class="btn btn-primary btn-sm"
+        [disabled]="f.invalid">Ajouter</button>
+  </form>
+</div>
+
